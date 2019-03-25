@@ -1,0 +1,19 @@
+contract FungibleToken =
+    public function transfer : (address, int) => bool
+    public function transfer_from : (address, address, int) => bool
+  
+contract ExchangeContract =
+    record state = {
+        receiving_token : FungibleToken,
+        sending_token   : FungibleToken,
+        rate           : int}
+
+    public stateful function init(receiving_token: FungibleToken, sending_token: FungibleToken, rate: int) = {
+        receiving_token = receiving_token,
+        sending_token   = sending_token,
+        rate           = rate}
+
+    public function exchange(value: int) : bool =
+        state.receiving_token.transfer_from(Call.caller, Contract.address, value)
+        state.sending_token.transfer(Call.caller, value * state.rate)
+        true
