@@ -1,27 +1,24 @@
+contract Token =
+  public function transfer : (address, int) => bool
+  public function transfer_from : (address, address, int) => bool
+
 contract Crowdsale =
   
   record state = {
       // Token public token | esta linea hay que arreglarla
       wallet    : address,
-      tokens    : int }
+      token     : address }
 
-    /*
+  /*
   datatype event =
       TokenPurchase(indexed address, indexed address, indexed int, indexed amount)
-    */
-
+  */
   
   public stateful function  init(_wallet : address, _token : address) = 
-    require(_wallet != address(0));
-    require(_token != address(0));
+    require(_wallet != address(0))
+    require(_token != address(0))
     { wallet = _wallet,
       token = _token }
-    
-    /*
-    function () external payable {
-        buyTokens(tokens);
-    }
-    */
 
   public stateful function buyTokens(_tokens : int) = 
     _preValidatePurchase'(Call.caller, Call.value)
@@ -41,5 +38,7 @@ contract Crowdsale =
   
   private stateful function _forwardFunds() =
     wallet.transfer(msg.value)
+
+    
 
     
