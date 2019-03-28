@@ -17,20 +17,20 @@ contract Token =
   	symbol                  = symbol,
     decimals                = decimals,
     total_supply            = total_supply,
-    balances          		= {},
+    balances          		  = {},
     allowed                 = {} }
-
-  private function lookup_by_address(k : address, m, v) =
-  	switch(Map.lookup(k, m))
-	    None    => v
-	    Some(x) => x
 
   public function name() : string = state.name
   public function symbol() : string = state.symbol
   public function decimals() : int = state.decimals
   public function total_supply() : int = state.total_supply
   
-  public function balance_of(who: address) : int = lookup_by_address(who, state.balances, 0)
+  public function balance_of(who : address) : int = lookup_by_address(who, state.balances, 0)
+
+  private function lookup_by_address(k : address, m, v) =
+  	switch(Map.lookup(k, m))
+	    None    => v
+	    Some(x) => x
   
   public function allowance(owner: address, spender: address) : int =
     switch(Map.lookup((owner, spender), state.allowed))
@@ -87,9 +87,6 @@ contract Token =
   private function require(b : bool, err : string) =
     if(!b)
       abort(err)
-  
-
-  
   
 
   
