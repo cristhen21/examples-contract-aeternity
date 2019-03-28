@@ -5,18 +5,16 @@ contract Token =
 contract Crowdsale =
   
   record state = {
-      // Token public token | esta linea hay que arreglarla
       wallet    : address,
       token     : address }
-
   /*
   datatype event =
       TokenPurchase(indexed address, indexed address, indexed int, indexed amount)
   */
   
-  public stateful function  init(_wallet : address, _token : address) = 
-    require(_wallet != address(0))
-    require(_token != address(0))
+  public stateful function init(_wallet : address, _token : address) = 
+    require(_wallet != #0)
+    require(_token != #0)
     { wallet = _wallet,
       token = _token }
 
@@ -37,8 +35,6 @@ contract Crowdsale =
     token.transfer(_beneficiary, _tokenAmount)
   
   private stateful function _forwardFunds() =
-    wallet.transfer(msg.value)
-
-    
+    wallet.transfer( Call.value)
 
     
