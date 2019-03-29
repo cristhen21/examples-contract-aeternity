@@ -1,24 +1,23 @@
 contract Token =
   record state = { 
-    owner           : address,              // address del creador del token
-    name            : string,               // nombre del token
-    symbol          : string,               // simbolo del token
-    decimals        : int,                  // cantidad de decimales que tendra el token
-    total_supply    : int,                  // total de fichas que se van a existir
-    balances        : map(address, int),    // balance de los tokens (address)
+    owner           : address,              
+    name            : string,               
+    symbol          : string,               
+    decimals        : int,                  
+    total_supply    : int,                  
+    balances        : map(address, int),    
     allowed         : map((address,address), int) }
  
- /**
-    Constructor
-  */
-  public stateful function  init(name : string, symbol : string, decimals : int, total_supply : int) = {
-  	owner                   = Call.caller,
-    name                    = name,
-  	symbol                  = symbol,
-    decimals                = decimals,
-    total_supply            = total_supply,
-    balances          		  = {},
-    allowed                 = {} }
+  public stateful function  init(name : string, symbol : string, decimals : int, total_supply : int) = 
+    let balances = balances[Call.caller, total_supply]
+    { owner                   = Call.caller,
+      name                    = name,
+      symbol                  = symbol,
+      decimals                = decimals,
+      total_supply            = total_supply,
+      balances                = balances,
+      allowed                 = {} }
+    
 
   public function name() : string = state.name
   public function symbol() : string = state.symbol
@@ -40,7 +39,7 @@ contract Token =
   private stateful function transfer'(from: address, to: address, value: int) : bool =
     require(value > 0, "Value is sub zero")
     require(value =< balance_of(from), "Not enough balance")
-    require(to != #0, "Invalid address") // prevents burning of tokens by sending to address 0. Technically is a valid request
+    require(to != #0, "Invalid address") 
 
     put(state{
       balances[from] = sub(balance_of(from), value),
