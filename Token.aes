@@ -9,13 +9,13 @@ contract Token =
     allowed         : map((address,address), int) }
  
   public stateful function  init(name : string, symbol : string, decimals : int, total_supply : int) = 
-    let balances = balances[Call.caller, total_supply]
+    let balance : map(address, int) = { [Call.caller] = total_supply}
     { owner                   = Call.caller,
       name                    = name,
       symbol                  = symbol,
       decimals                = decimals,
       total_supply            = total_supply,
-      balances                = balances,
+      balances                = balance,
       allowed                 = {} }
     
 
